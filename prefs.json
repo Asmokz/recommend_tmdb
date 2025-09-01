@@ -1,0 +1,30 @@
+{
+  "genres": {
+    "sci-fi": 8,
+    "drama": 3,
+    "thriller": 5,
+    "comedy": 8,
+    "fantasy": 8,
+    "mystery": 5,
+    "action": 8,
+    "animation": 6,
+    "adventure": 7,
+    "documentary": 4,
+    "family": 2,
+    "history": 2,
+    "music": 2,
+    "western": 1
+  },
+  "avoid_genres": [
+    "horror"
+  ],
+  "max_length_min": 160,
+  "platforms_preferred": {
+    "Netflix": 2,
+    "Prime Video": 2
+  },
+  "cooldown_days": 7,
+  "diversity_bias": 0.3,
+  "temperature": 0.9,
+  "exclude_seen": true
+}
