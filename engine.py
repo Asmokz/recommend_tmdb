@@ -74,8 +74,8 @@ def _score_movie(movie, prefs: Dict[str, Any],
     score = movie.rating or 0.0
 
     # --- Exclusions directes ---
-    if prefs.get("exclude_seen") and profile and has_seen(movie.id, profile):
-        return -999  # éliminé
+    #if prefs.get("exclude_seen") and profile and has_seen(movie.id, profile):
+    #    return -999  # éliminé
 
     if prefs.get("avoid_genres"):
         if any(g in prefs["avoid_genres"] for g in _map_genres(movie.genres)):

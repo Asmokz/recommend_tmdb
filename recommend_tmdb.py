@@ -3,6 +3,7 @@ import os
 from engine import recommend
 from tmdb_loader import fetch_movies_from_tmdb, convert_to_movies
 from profile_utils import load_profile
+from engine import _map_genres
 
 def main():
     # Charger prefs.json
@@ -28,7 +29,7 @@ def main():
     # Étape 3 : afficher résultats
     print("\n🎬 Suggestions via TMDB :")
     for m in picks:
-        print(f"- {m.title} (genres={m.genres}) -> score {scores[m.id]:.2f}")
+        print(f"- {m.title} (genres={_map_genres(m.genres)}) -> score {scores[m.id]:.2f}")
 
 if __name__ == "__main__":
     main()
