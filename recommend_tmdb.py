@@ -19,7 +19,7 @@ def main():
             tags_map = json.load(f)
 
     # Étape 1 : récupérer films depuis TMDB
-    raw_movies = fetch_movies_from_tmdb(genre_id=28, pages=2)  # ex: Action
+    raw_movies = fetch_movies_from_tmdb(pages=20)
     movies = convert_to_movies(raw_movies, tags_map)
 
     # Étape 2 : lancer le moteur de recommandation
