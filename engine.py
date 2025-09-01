@@ -74,12 +74,17 @@ def _score_movie(movie, prefs: Dict[str, Any],
     score = movie.rating or 0.0
 
     # --- Exclusions directes ---
-    #if prefs.get("exclude_seen") and profile and has_seen(movie.id, profile):
-    #    return -999  # éliminé
+    if prefs.get("exclude_seen") and profile and has_seen(movie.id, profile):
+        return -999 
 
     if prefs.get("avoid_genres"):
-        if any(g in prefs["avoid_genres"] for g in _map_genres(movie.genres)):
+        avoid = [g.lower() for g in prefs["avoid_genres"]]
+        mapped_genres = _map_genres(movie.genres)
+        if any(g.lower() in avoid for g in mapped_genres):
+            print(f"Exclusion de {movie.title} car genre interdit trouvé !")
             return -999
+
+
 
     if prefs.get("max_length_min") and movie.length_min:
         if movie.length_min > prefs["max_length_min"]:
@@ -117,34 +122,35 @@ def recommend(movies: List[Movie], prefs: Dict[str, Any],
               context: Optional[Dict[str, Any]] = None,
               profile: Optional[Dict[str, Any]] = None,
               k: int = 5, diversity: float = 0.3) -> Tuple[List[Movie], Dict[str, float]]:
-    """
-    Renvoie une liste de recommandations et les scores.
-    - movies : liste de Movie (déjà chargés)
-    - prefs : préférences utilisateur (poids genres, plateformes…)
-    - context : humeur ou autre info
-    - profile : données perso (notes, seen, last_suggested)
-    - k : nombre de films à suggérer
-    - diversity : proba de prendre un film au hasard dans le top pour varier
-    """
-    scored = [(m, _score_movie(m, prefs, context, profile)) for m in movies]
+
+    # 1. Calculer les scores et filtrer les films exclus
+    scored = []
+    for m in movies:
+        score = _score_movie(m, prefs, context, profile)
+        if score != -999:  # On ne garde que les films non exclus
+            scored.append((m, score))
+
+    # 2. Trier les films restants
     scored.sort(key=lambda x: x[1], reverse=True)
 
+    # 3. Sélection avec diversité
     selected = []
     scores = {}
     for m, s in scored:
         if len(selected) >= k:
             break
         if random.random() < diversity and len(scored) > k:
-            pick = random.choice(scored[k:])[0]
+            pick = random.choice(scored[k:])[0]  # Pioche parmi les films valides
             selected.append(pick)
             scores[pick.id] = s
         else:
             selected.append(m)
             scores[m.id] = s
 
-    # Mise à jour du profil (dernière suggestion)
+    # Mise à jour du profil
     if profile:
         for m in selected:
             update_last_suggested(m.id, profile)
 
     return selected, scores
+

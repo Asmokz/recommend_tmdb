@@ -24,7 +24,7 @@
     "Prime Video": 2
   },
   "cooldown_days": 7,
-  "diversity_bias": 0.3,
+  "diversity_bias": 0.2,
   "temperature": 0.9,
-  "exclude_seen": true
+  "exclude_seen": false
 }
