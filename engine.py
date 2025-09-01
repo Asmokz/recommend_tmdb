@@ -16,7 +16,7 @@ from profile_utils import (
 # -------------------------
 
 # Charger le mapping des genres TMDB
-with open("genre_map.json", "r", encoding="utf-8") as f:
+with open("resources/genre_map.json", "r", encoding="utf-8") as f:
     GENRE_MAP = json.load(f)
 
 def _map_genres(genre_ids):
@@ -148,45 +148,3 @@ def recommend(movies: List[Movie], prefs: Dict[str, Any],
             update_last_suggested(m.id, profile)
 
     return selected, scores
-
-# -------------------------
-# MAIN (CLI)
-# -------------------------
-
-def main():
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--movies", type=str, default="movies.json")
-    parser.add_argument("--prefs", type=str, default="prefs.json")
-    parser.add_argument("--profile", type=str, default="profile.json")
-    parser.add_argument("--context", type=str, default="contexts.json")
-    parser.add_argument("--k", type=int, default=5)
-    parser.add_argument("--diversity", type=float, default=0.3)
-    args = parser.parse_args()
-
-    # Charger films
-    with open(args.movies, "r", encoding="utf-8") as f:
-        movies_raw = json.load(f)
-    movies = [Movie.from_dict(m) for m in movies_raw]
-
-    # Charger prefs
-    with open(args.prefs, "r", encoding="utf-8") as f:
-        prefs = json.load(f)
-
-    # Charger profil
-    profile = load_profile(args.profile)
-
-    # Charger contexte (facultatif)
-    context = None
-    if args.context and os.path.exists(args.context):
-        with open(args.context, "r", encoding="utf-8") as f:
-            context = json.load(f)
-
-    picks, scores = recommend(movies, prefs, context, profile,
-                              k=args.k, diversity=args.diversity)
-
-    print("\n🎬 Recommandations :")
-    for m in picks:
-        print(f"- {m.title} ({', '.join(m.genres)}) -> score {scores[m.id]:.2f}")
-
-if __name__ == "__main__":
-    main()

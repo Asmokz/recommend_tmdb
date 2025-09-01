@@ -6,16 +6,16 @@ from profile_utils import load_profile
 
 def main():
     # Charger prefs.json
-    with open("prefs.json", "r", encoding="utf-8") as f:
+    with open("resources/prefs.json", "r", encoding="utf-8") as f:
         prefs = json.load(f)
 
     # Charger profil
-    profile = load_profile("profile.json")
+    profile = load_profile("resources/profile.json")
 
     # Charger tags.json (optionnel)
     tags_map = {}
-    if os.path.exists("tags.json"):
-        with open("tags.json", "r", encoding="utf-8") as f:
+    if os.path.exists("resources/tags.json"):
+        with open("resources/tags.json", "r", encoding="utf-8") as f:
             tags_map = json.load(f)
 
     # Étape 1 : récupérer films depuis TMDB
